@@ -1,0 +1,3 @@
+[submodule "LArCV"]
+	path = LArCV
+	url = https://github.com/LArbys/LArCV
