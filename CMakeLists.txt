@@ -40,18 +40,28 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
 cet_report_compiler_flags()
 
 # these are minimum required versions, not the actual product versions
-find_ups_product( larsoft v1_00_00 )
-find_ups_product( nutools v1_00_00 )
-find_ups_product( art v1_08_00 )
+find_ups_product( larlite v1_00_00 )
 find_ups_product( cetbuildtools v4_14_01 )
 
-# macros for dictionary and simple_plugin
-include(ArtDictionary)
-include(ArtMake)
-include(BuildPlugins)
-
 # ADD SOURCE CODE SUBDIRECTORIES HERE
-add_subdirectory(larcv)
+#add_subdirectory(larcv)
+
+execute_process(COMMAND git submodule update --init
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE submodule_update)
+
+file(GLOB larcv_source "${CMAKE_CURRENT_SOURCE_DIR}/LArCV/*")
+file(COPY ${larcv_source}  DESTINATION ${CMAKE_INSTALL_PREFIX}/${flavorqual_dir})
+
+message("Making LArCV...")
+set(make_command "source configure.sh &&  make")
+execute_process(COMMAND source configure.sh
+  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${flavorqual_dir}
+  OUTPUT_VARIABLE configure_output)
+execute_process(COMMAND make
+  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${flavorqual_dir}
+  OUTPUT_VARIABLE make_output)
+
 
 # tests
 add_subdirectory(test)
